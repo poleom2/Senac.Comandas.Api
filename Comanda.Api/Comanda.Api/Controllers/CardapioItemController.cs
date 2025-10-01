@@ -10,34 +10,40 @@ namespace Comanda.Api.Controllers
     public class CardapioItemController : ControllerBase
     {
         // GET: api/<CardapioItemControlleer>
-        [HttpGet]
-        public IEnumerable<CardapioItem> Get()
+        public List<CardapioItem> cardapios = new List<CardapioItem>
         {
-            return new CardapioItem[] {
-                new CardapioItem {
-                    Id = 1, Titulo = "Coca-Cola",
-                    Descricao = "Refrigerante 350ml",
-                    Preco = 5.00M,
-                    PossuiPreparo = false
-                },
-
-                new CardapioItem
-                {
-                   Id = 2,
-                   Titulo = "Pizza Calabresa",
-                   Descricao = "Pizza sabor calabresa com borda recheada",
-                   Preco = 40.00M,
-                   PossuiPreparo = true
-
-                },
-            };
+            new CardapioItem {
+                Id = 1, Titulo = "Coca-Cola",
+                Descricao = "Refrigerante 350ml",
+                Preco = 5.00M,
+                PossuiPreparo = false
+            },
+            new CardapioItem
+            {
+               Id = 2,
+               Titulo = "Pizza Calabresa",
+               Descricao = "Pizza sabor calabresa com borda recheada",
+               Preco = 40.00M,
+               PossuiPreparo = true
+            }
+        };
+        [HttpGet]
+        public  IResult GetCardapio ()
+        {
+            return Results.Ok(cardapios);
         }
             // GET api/<CardapioItemControlleer>/5
             [HttpGet("{id}")]
-            public string Get(int id)
+            public IResult Get(int id)
             {
-                return "value";
+                var cardapio  = cardapios.FirstOrDefault(c => c.Id == id);
+            if (cardapio == null)
+            {
+                return Results.NotFound("Cardapio não encontrado!");
             }
+
+            return Results.Ok(cardapio);
+        }
 
             // POST api/<CardapioItemControlleer>
             [HttpPost]
