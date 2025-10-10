@@ -1,4 +1,5 @@
-﻿using Comanda.Api.Models;
+﻿using Comanda.Api.DTOs;
+using Comanda.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -52,14 +53,22 @@ namespace Comanda.Api.Controllers
 
         // POST api/<MesaController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IResult Post([FromBody] MesaCreateResquest mesaCreate)
         {
+            
+            return Results.NoContent();
         }
 
         // PUT api/<MesaController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IResult Put(int id, [FromBody] MesaUpdateresquest mesaUpdate)
         {
+            var mesa = mesas.FirstOrDefault(m => m.Id == m.Id);
+            if (mesa is null)
+                return Results.NotFound($"Mesa do Não encontrado.");
+            mesa.SituacaoMesa = mesaUpdate.SituacaoMesa;
+            mesa.NumeroMesa = mesaUpdate.NumeroMesa;
+            return Results.Ok(mesa);
         }
 
         // DELETE api/<MesaController>/5
