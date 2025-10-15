@@ -1,4 +1,5 @@
 ﻿using Comanda.Api.DTOs;
+using Comanda.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -10,13 +11,22 @@ namespace Comanda.Api.Controllers
     [ApiController]
     public class ComandaController : ControllerBase
     {
-         List<Models.Comanda> comandas = new List<Models.Comanda>
+        static List<Models.Comanda> comandas = new List<Models.Comanda>
         {
             new Models.Comanda
             {
                  Id = 1,
                  NomeCliente = "Jairo",
                  NumeroMesa = 1,
+                 Itens = new List<ComandaItem>
+                 {
+                     new ComandaItem
+                     {
+                         Id = 1,
+                         CardapioItemId = 1,
+                         ComandaId = 1,
+                     }
+                 }
                 
             },
             new Models.Comanda
@@ -24,6 +34,15 @@ namespace Comanda.Api.Controllers
                 Id = 2,
                  NomeCliente = "Pedro",
                  NumeroMesa = 2,
+                 Itens = new List<ComandaItem>
+                 {
+                     new ComandaItem
+                     {
+                         Id = 2,
+                         CardapioItemId = 2,
+                         ComandaId = 1,
+                     }
+                 }
              
             }
         };
@@ -65,12 +84,26 @@ namespace Comanda.Api.Controllers
             }
 
             var novaComanda = new Models.Comanda
+
             {
                 Id = comandas.Count + 1,
                 NomeCliente = comandaCreate.NomeCliente,
                 NumeroMesa = comandaCreate.NumeroMesa
             };
-            comandas.Add(novaComanda);
+            var comandaItens = new List<ComandaItem>();
+            foreach (int cardapioItemds in comandaCreate.CardapioItemds)
+            {
+                var comandaItem = new ComandaItem
+                {
+                    Id = comandaItens.Count + 1,
+                    CardapioItemId = cardapioItemds,
+                    ComandaId = novaComanda.Id,
+                };
+                comandaItens.Add(comandaItem);
+            }
+            novaComanda.Itens = comandaItens;
+          
+                comandas.Add(novaComanda);
             return Results.Created($"/api/comanda/{novaComanda.Id}", novaComanda);
         }
 
@@ -78,11 +111,16 @@ namespace Comanda.Api.Controllers
         [HttpPut("{id}")]
         public IResult Put(int id, [FromBody] ComandaUpdateResquest comandaUpdate)
         {
-            var comanda = comandas.FirstOrDefault(x => x.Id == id);
+            var comanda = comandas.FirstOrDefault(c => c.Id == id);
             if (comanda is null)
-                return Results.NotFound($"Comanda do {id} não encontrado.");
-                comanda.NumeroMesa = comandaUpdate.NumeroMesa;
-                comanda.NomeCliente = comandaUpdate.NomeCliente;
+                return Results.NotFound("Comanda não encontrada.");
+            if(comandaUpdate.NomeCliente.Length < 3)
+                return Results.BadRequest("O numero do cliente deve ter no mínimo 3 caracteres.");
+            if (comandaUpdate.NumeroMesa <=0)
+                return Results.BadRequest("O numero da mesa deve ser maior que zero.");
+            comanda.NumeroMesa = comandaUpdate.NumeroMesa;
+            comanda.NomeCliente = comandaUpdate.NomeCliente;
+
                comandas.Add(comanda);
             return Results.NoContent();
 
