@@ -91,7 +91,7 @@ namespace Comanda.Api.Controllers
                 NumeroMesa = comandaCreate.NumeroMesa
             };
             var comandaItens = new List<ComandaItem>();
-            foreach (int cardapioItemds in comandaCreate.CardapioItemds)
+            foreach (var cardapioItemds in comandaCreate.CardapioItemds)
             {
                 var comandaItem = new ComandaItem
                 {
@@ -128,8 +128,16 @@ namespace Comanda.Api.Controllers
 
         // DELETE api/<ComandaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            var comanda = comandas.FirstOrDefault(c => c.Id == id);
+            if (comanda is null)
+            return Results.NotFound("Comanda não encontrada!");
+            var comandaReovida = comandas.Remove(comanda);
+            if (comandaReovida)
+                return Results.NoContent();
+            return Results.StatusCode(500);
+            
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Comanda.Api.Controllers
     [ApiController]
     public class MesaController : ControllerBase
     {
-        public List<Mesa> mesas = new List<Mesa>()
+       static public List<Mesa> mesas = new List<Mesa>()
 
         {
             new Mesa() {
@@ -73,8 +73,16 @@ namespace Comanda.Api.Controllers
 
         // DELETE api/<MesaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            var mesa = mesas.FirstOrDefault(me => me.Id == id);
+            if (mesa is null) 
+                return Results.NotFound($"Mesa com o id {id} não encontrada!");
+            var mesamovida = mesas.Remove(mesa);
+            if(mesamovida)
+                return Results.NoContent();
+            return Results.StatusCode(500);
+
         }
     }
 }

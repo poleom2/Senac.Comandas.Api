@@ -1,4 +1,5 @@
-﻿using Comanda.Api.Models;
+﻿using Comanda.Api.DTOs;
+using Comanda.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -45,14 +46,47 @@ namespace Comanda.Api.Controllers
 
         // POST api/<PedidoCozinhaController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IResult Post([FromBody] PedidocozinhaCreateRequest pedidocozinhaCreate)
         {
+            var novoPedidoCozinha = new PedidoCozinha
+            {
+                id = pedidos.Count + 1,
+                ComandaId = pedidocozinhaCreate.ComandaId,
+
+            };
+            var pedidosItem = new List<PedidoCozinhaItem>();
+            foreach (var item in pedidocozinhaCreate.items)
+            {
+                var pedidoItem = new PedidoCozinhaItem
+                {
+                    Id = pedidos.Count + 1,
+                    ComandaItemId = item.ComandaItemId,
+                    PedidoCozinhaId = item.PedidoCozinhaid
+                };
+                pedidosItem.Add(pedidoItem);
+            }
+
+            novoPedidoCozinha.items = pedidosItem ;
+
+            pedidos.Add(novoPedidoCozinha);
+            return Results.Created($"/api/PedidoCozinha/{novoPedidoCozinha.id}", novoPedidoCozinha);
+        
         }
+
+       
+
 
         // PUT api/<PedidoCozinhaController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IResult Put(int id, [FromBody] PedidocozinhaUpdateRequest pedidocozinhaUpdate)
         {
+            var cpedido = pedidos.FirstOrDefault(p => p.id == id);
+            if (cpedido is null)
+                return Results.NotFound("Pedido não encontado!");
+                cpedido.ComandaId = pedidocozinhaUpdate.ComandaId;
+                
+
+            
         }
 
         // DELETE api/<PedidoCozinhaController>/5

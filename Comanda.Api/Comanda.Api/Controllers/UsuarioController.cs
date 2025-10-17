@@ -1,5 +1,6 @@
 ﻿using Comanda.Api.DTOs;
 using Comanda.Api.Models;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -91,8 +92,15 @@ namespace Comanda.Api.Controllers
 
         // DELETE api/<UsuarioController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            var usuario = usuarios.FirstOrDefault(u => u.Id == id);
+            if (usuario is null)
+                return Results.NotFound($"Usuario com o id {id} não encontrado!");
+             var usuarioremovido  = usuarios.Remove(usuario);
+            if (usuarioremovido)
+                return Results.NoContent();
+            return Results.StatusCode(500);
         }
     }
 }
