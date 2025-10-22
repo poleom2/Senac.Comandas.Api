@@ -78,16 +78,16 @@ namespace Comanda.Api.Controllers
 
         // PUT api/<PedidoCozinhaController>/5
         [HttpPut("{id}")]
-        public IResult Put(int id, [FromBody] PedidocozinhaUpdateRequest pedidocozinhaUpdate)
-        {
-            var cpedido = pedidos.FirstOrDefault(p => p.id == id);
-            if (cpedido is null)
-                return Results.NotFound("Pedido não encontado!");
-                cpedido.ComandaId = pedidocozinhaUpdate.ComandaId;
+        //public IResult Put(int id, [FromBody] PedidocozinhaUpdateRequest pedidocozinhaUpdate)
+        //{
+        //    var cpedido = pedidos.FirstOrDefault(p => p.id == id);
+        //    if (cpedido is null)
+        //        return Results.NotFound("Pedido não encontado!");
+        //        cpedido.ComandaId = pedidocozinhaUpdate.ComandaId;
                 
 
             
-        }
+        //}
 
         // DELETE api/<PedidoCozinhaController>/5
         [HttpDelete("{id}")]
