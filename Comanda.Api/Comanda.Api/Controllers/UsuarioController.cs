@@ -11,28 +11,17 @@ namespace Comanda.Api.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        static List<Usuario> usuarios = new List<Usuario>
+        public ComandaDbContext _context { get; set; }
+        public UsuarioController(ComandaDbContext context)
         {
-            new Usuario
-            {
-                Id = 1,
-                Nome = "Miguel",
-                Email = "admin@admin.com",
-                Senha = "admin"
-            },
-            new Usuario
-            {
-                Id = 2,
-                Nome = "Nehemias",
-                 Email = "nehemias@gmail.com",
-                 Senha= "admin"
-            }
+            _context = context;
+        }
 
-        };
         // GET: api/<UsuarioController>
         [HttpGet]
         public IResult GetUsuario()
         {
+            var usuarios = _context.Usuarios.ToList();
             return  Results.Ok(usuarios);
         }
 
@@ -40,7 +29,7 @@ namespace Comanda.Api.Controllers
         [HttpGet("{id}")]
         public IResult Get(int id)
         {
-            var usuario = usuarios.FirstOrDefault(us => us.Id == id);
+            var usuario = _context.Usuarios.FirstOrDefault(us => us.Id == id);
             if (usuario == null)
             {
                 return Results.NotFound("Usuario não encontrado!");
@@ -67,12 +56,13 @@ namespace Comanda.Api.Controllers
             }
             var usuario = new Usuario
             {
-                Id = usuarios.Count + 1,
+               
                 Nome = usuarioCreate.Nome,
                 Email = usuarioCreate.Email,
                 Senha = usuarioCreate.Senha,
             };
-            usuarios.Add(usuario);
+            _context.Usuarios.Add(usuario);
+            _context.SaveChanges();
             return Results.Created($"/api/usuario/{usuario.Id}",usuario);
         }
 
@@ -80,13 +70,14 @@ namespace Comanda.Api.Controllers
         [HttpPut("{id}")]
         public IResult Put(int id, [FromBody] UsuarioUpdateResquest usuarioUpdate)
         {
-            var usuario = usuarios.FirstOrDefault(us => us.Id == id);
+            var usuario = _context.Usuarios.FirstOrDefault(us => us.Id == id);
             if (usuario is null)
                 return Results.NotFound($"Usuario do {id} não encontrado.");
             usuario.Email = usuarioUpdate.Email;
           usuario.Nome = usuarioUpdate.Nome;
             usuario.Senha = usuarioUpdate.Senha;
-                return Results.NoContent();
+            _context.SaveChanges();
+            return Results.NoContent();
             
          }
 
@@ -94,12 +85,15 @@ namespace Comanda.Api.Controllers
         [HttpDelete("{id}")]
         public IResult Delete(int id)
         {
-            var usuario = usuarios.FirstOrDefault(u => u.Id == id);
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == id);
             if (usuario is null)
                 return Results.NotFound($"Usuario com o id {id} não encontrado!");
-             var usuarioremovido  = usuarios.Remove(usuario);
-            if (usuarioremovido)
+             _context.Usuarios.Remove(usuario);
+            var removido= _context.SaveChanges();
+            if (removido > 0)
+            {
                 return Results.NoContent();
+            }
             return Results.StatusCode(500);
         }
     }
