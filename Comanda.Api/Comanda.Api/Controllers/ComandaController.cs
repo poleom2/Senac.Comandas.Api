@@ -69,9 +69,11 @@ namespace Comanda.Api.Controllers
                 {
                 
                     CardapioItemId = cardapioItemds,
-                    ComandaId = novaComanda.Id,
+                    Comanda= novaComanda,
                 };
                 comandaItens.Add(comandaItem);
+                var cardapioItem = _context.CardapioItens.FirstOrDefault(c => c.Id == cardapioItemds);
+
             }
             novaComanda.Itens = comandaItens;
           

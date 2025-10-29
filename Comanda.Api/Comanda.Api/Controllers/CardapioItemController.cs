@@ -52,6 +52,17 @@ namespace Comanda.Api.Controllers
                 {
                  return Results.BadRequest("O preço do item do cardapio deve ser maior a zero");
                 }
+                if (cardapio.Imagem!=null)
+            {
+                if (!Uri.IsWellFormedUriString(cardapio.Imagem, UriKind.Absolute))
+                {
+                    return Results.BadRequest("A imagem deve ser uma URL válida.");
+                }
+            }
+                if(cardapio.Tipo==null)
+            {
+                return Results.BadRequest("Não pode estar vazio. ");
+            }
             var cardapioitem = new CardapioItem
             {
                
@@ -59,6 +70,8 @@ namespace Comanda.Api.Controllers
                 Descricao = cardapio.Descricao,
                 Preco = cardapio.Preco,
                 PossuiPreparo =cardapio.PossuiPreparo,
+                Imagem = cardapio.Imagem,
+                Tipo = cardapio.Tipo
             };
             _context.CardapioItens.Add(cardapioitem);
             _context.SaveChanges();
@@ -78,6 +91,8 @@ namespace Comanda.Api.Controllers
                 cardapioItem.Descricao = cardapio.Descricao;
                 cardapioItem.Preco = cardapio.Preco;
                 cardapioItem.PossuiPreparo = cardapio.PossuiPreparo;
+                cardapioItem.Imagem = cardapio.Imagem;
+                cardapioItem.Tipo = cardapio.Tipo;
             _context.SaveChanges();
             return Results.NoContent();
 
