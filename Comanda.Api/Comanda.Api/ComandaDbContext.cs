@@ -7,7 +7,39 @@ namespace Comanda.Api
         public ComandaDbContext(DbContextOptions<ComandaDbContext> options) : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Models.Usuario>().HasData(
+                new Models.Usuario
+                {
+                    Id = 1,
+                    Nome = "adm",
+                    Email = "adm",
+                    Senha = "adm1234"
+                }
+                );
+            modelBuilder.Entity<Models.Mesa>().HasData(
+                 new Models.Mesa
+                 {
+                     Id = 1,
+                     NumeroMesa = 1,
+                     SituacaoMesa = 1,
+                 }
+                );
+            modelBuilder.Entity<Models.CardapioItem>().HasData(
+                    new Models.CardapioItem{
+                        Id = 6,
+                       Titulo = " X Carne",
+                       Descricao = " 2 Carne, Queijo, Tomate, Cebola dulce, Molho da casa",
+                       PossuiPreparo = true,
+                       Preco = 30,
+                       Tipo = "Lanche",
+                       Imagem= "https://img77.uenicdn.com/image/upload/v1543484687/service_images/shutterstock_1040760661.jpg"
 
+                    }
+                );
+            base.OnModelCreating(modelBuilder);
+        }
         public DbSet<Models.Usuario> Usuarios{ get; set; } = default!;
         public DbSet<Models.Comanda> Comandas { get; set; } = default!;
         public DbSet<Models.ComandaItem> ComandaItens { get; set; } = default!;
