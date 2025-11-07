@@ -94,7 +94,19 @@ namespace Comanda.Api.Controllers
           
                 _context.Comandas.Add(novaComanda);
             _context.SaveChanges();
-            return Results.Created($"/api/comanda/{novaComanda.Id}", novaComanda);
+            var response = new comandaCrestrResponse
+            {
+                id = novaComanda.Id,
+                NomeCliente = novaComanda.NomeCliente,
+                NumeroMesa = novaComanda.NumeroMesa,
+                Itens = novaComanda.Itens.Select(i => new ComandaItemResponse
+                {
+                    Id = i.Id,
+                    Titulo = _context.CardapioItens.First(ci => ci.Id == i.CardapioItemId).Titulo
+                }).ToList(),
+
+            };
+            return Results.Created($"/api/comanda/{response.id}", response);
         }
 
         // PUT api/<ComandaController>/5

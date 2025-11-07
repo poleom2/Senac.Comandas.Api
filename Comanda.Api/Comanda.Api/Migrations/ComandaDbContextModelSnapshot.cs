@@ -51,7 +51,17 @@ namespace Comanda.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 6,
+                            Id = 1,
+                            Descricao = " 2 Carne, Queijo, Tomate, Cebola dulce, Molho da casa",
+                            Imagem = "https://img77.uenicdn.com/image/upload/v1543484687/service_images/shutterstock_1040760661.jpg",
+                            PossuiPreparo = true,
+                            Preco = 30m,
+                            Tipo = "Lanche",
+                            Titulo = " X Carne"
+                        },
+                        new
+                        {
+                            Id = 2,
                             Descricao = " 2 Carne, Queijo, Tomate, Cebola dulce, Molho da casa",
                             Imagem = "https://img77.uenicdn.com/image/upload/v1543484687/service_images/shutterstock_1040760661.jpg",
                             PossuiPreparo = true,
@@ -119,6 +129,18 @@ namespace Comanda.Api.Migrations
                         {
                             Id = 1,
                             NumeroMesa = 1,
+                            SituacaoMesa = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            NumeroMesa = 2,
+                            SituacaoMesa = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            NumeroMesa = 3,
                             SituacaoMesa = 1
                         });
                 });

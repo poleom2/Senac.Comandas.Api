@@ -2,10 +2,12 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Comanda.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class v1 : Migration
+    public partial class cadastro_mesa : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -150,6 +152,30 @@ namespace Comanda.Api.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "CardapioItens",
+                columns: new[] { "Id", "Descricao", "Imagem", "PossuiPreparo", "Preco", "Tipo", "Titulo" },
+                values: new object[,]
+                {
+                    { 1, " 2 Carne, Queijo, Tomate, Cebola dulce, Molho da casa", "https://img77.uenicdn.com/image/upload/v1543484687/service_images/shutterstock_1040760661.jpg", true, 30m, "Lanche", " X Carne" },
+                    { 2, " 2 Carne, Queijo, Tomate, Cebola dulce, Molho da casa", "https://img77.uenicdn.com/image/upload/v1543484687/service_images/shutterstock_1040760661.jpg", true, 30m, "Lanche", " X Carne" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Mesas",
+                columns: new[] { "Id", "NumeroMesa", "SituacaoMesa" },
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 2, 2, 1 },
+                    { 3, 3, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Usuarios",
+                columns: new[] { "Id", "Email", "Nome", "Senha" },
+                values: new object[] { 1, "adm", "adm", "adm1234" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ComandaItens_ComandaId",

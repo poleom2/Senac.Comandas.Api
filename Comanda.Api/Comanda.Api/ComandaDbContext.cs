@@ -24,17 +24,40 @@ namespace Comanda.Api
                      Id = 1,
                      NumeroMesa = 1,
                      SituacaoMesa = 1,
+                 },
+                 new Models.Mesa
+                 {
+                     Id = 2,
+                     NumeroMesa = 2,
+                     SituacaoMesa = 1,
+                 },
+                 new Models.Mesa
+                 {
+                     Id = 3,
+                     NumeroMesa = 3,
+                     SituacaoMesa = 1,
                  }
                 );
             modelBuilder.Entity<Models.CardapioItem>().HasData(
                     new Models.CardapioItem{
-                        Id = 6,
+                        Id = 1,
                        Titulo = " X Carne",
                        Descricao = " 2 Carne, Queijo, Tomate, Cebola dulce, Molho da casa",
                        PossuiPreparo = true,
                        Preco = 30,
                        Tipo = "Lanche",
                        Imagem= "https://img77.uenicdn.com/image/upload/v1543484687/service_images/shutterstock_1040760661.jpg"
+
+                    },                    
+                    new Models.CardapioItem
+                    {
+                        Id = 2,
+                        Titulo = " X Carne",
+                        Descricao = " 2 Carne, Queijo, Tomate, Cebola dulce, Molho da casa",
+                        PossuiPreparo = true,
+                        Preco = 30,
+                        Tipo = "Lanche",
+                        Imagem = "https://img77.uenicdn.com/image/upload/v1543484687/service_images/shutterstock_1040760661.jpg"
 
                     }
                 );
