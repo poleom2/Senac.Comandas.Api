@@ -1,6 +1,7 @@
 ﻿using Comanda.Api.DTOs;
 using Comanda.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -114,6 +115,7 @@ namespace Comanda.Api.Controllers
         public IResult Put(int id, [FromBody] ComandaUpdateResquest comandaUpdate)
         {
             var comanda = _context.Comandas.FirstOrDefault(c => c.Id == id);
+
             if (comanda is null)
                 return Results.NotFound("Comanda não encontrada.");
             if(comandaUpdate.NomeCliente.Length < 3)
@@ -122,11 +124,45 @@ namespace Comanda.Api.Controllers
                 return Results.BadRequest("O numero da mesa deve ser maior que zero.");
             comanda.NumeroMesa = comandaUpdate.NumeroMesa;
             comanda.NomeCliente = comandaUpdate.NomeCliente;
+            foreach(var item in comandaUpdate.Itens)
+            {
+                if(item.Id > 0 && item.Remuve == true)
+                {
+                    //remuve
+                    RemoverItemComanda(item.Id);
 
-               _context.Comandas.Add(comanda);
+                }
+                if(item.CardapioItemId > 0)
+                {
+                    //inseriendo
+                    inseriendoItemComanda(comanda, item.CardapioItemId);
+                }
+            }
+
+            
             _context.SaveChanges();
             return Results.NoContent();
 
+        }
+
+        private void inseriendoItemComanda(Models.Comanda comanda, int cardapioItemId)
+        {
+           _context.ComandaItens.Add(
+               new ComandaItem
+               {
+                   CardapioItemId = cardapioItemId,
+                   Comanda = comanda
+               }
+               );
+        }
+
+        private void RemoverItemComanda(int id)
+        {
+            var comandaItem = _context.ComandaItens.FirstOrDefault(ci => ci.Id == id);
+            if(comandaItem is not null)
+            {
+                _context.ComandaItens.Remove(comandaItem);
+            }
         }
 
         // DELETE api/<ComandaController>/5

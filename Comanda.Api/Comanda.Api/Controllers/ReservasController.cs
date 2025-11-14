@@ -44,7 +44,7 @@ namespace Comanda.Api.Controllers
 
         // PUT: api/Reservas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{Id}")]
         public async Task<IActionResult> PutReserva(int id, Reserva reserva)
         {
             if (id != reserva.id)
@@ -53,6 +53,15 @@ namespace Comanda.Api.Controllers
             }
 
             _context.Entry(reserva).State = EntityState.Modified;
+            var novaMesa = await _context.Mesas.FirstOrDefaultAsync(nm => nm.NumeroMesa == reserva.NumeroMesa);
+            if (novaMesa is null) { 
+                return BadRequest("Mesa Não encontrada.");
+            }
+            novaMesa.SituacaoMesa = (int) SituacaoMesa.Reservada;
+            var reservaOriginal = await _context.Reservas.AsNoTracking().FirstOrDefaultAsync(r => r.id == id);
+            var numerpMesaOriginal = reservaOriginal!.NumeroMesa;
+            var MesaOriginal = await _context.Mesas.FirstOrDefaultAsync(m => m.NumeroMesa == numerpMesaOriginal);
+                MesaOriginal!.SituacaoMesa = (int) SituacaoMesa.Livre;
 
             try
             {
@@ -79,6 +88,18 @@ namespace Comanda.Api.Controllers
         public async Task<ActionResult<Reserva>> PostReserva(Reserva reserva)
         {
             _context.Reservas.Add(reserva);
+            var mesa = await _context.Mesas.FirstOrDefaultAsync(m =>m.NumeroMesa == reserva.NumeroMesa);
+            if (mesa is not null)
+            {
+             if (mesa is null)
+                    return BadRequest("Mesa não encontrada");
+             if(mesa.SituacaoMesa != (int) SituacaoMesa.Livre)
+                {
+                    return BadRequest("Mesa não esta disponivel para reserva.");
+                }
+                mesa.SituacaoMesa = (int)SituacaoMesa.Reservada;
+
+            }
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetReserva", new { id = reserva.id }, reserva);
@@ -91,9 +112,15 @@ namespace Comanda.Api.Controllers
             var reserva = await _context.Reservas.FindAsync(id);
             if (reserva == null)
             {
-                return NotFound();
+                return NotFound("Reserva naõ encontrado");
+            }
+            var mesa = await _context.Mesas.FirstOrDefaultAsync(m => m.NumeroMesa== reserva.NumeroMesa);
+            if (mesa is  null)
+            {
+                return BadRequest("Mesa não encontrada");
             }
 
+            mesa.SituacaoMesa = (int)SituacaoMesa.Livre;
             _context.Reservas.Remove(reserva);
             await _context.SaveChangesAsync();
 

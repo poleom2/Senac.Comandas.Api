@@ -7,7 +7,7 @@
 namespace Comanda.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class cadastro_mesa : Migration
+    public partial class v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
