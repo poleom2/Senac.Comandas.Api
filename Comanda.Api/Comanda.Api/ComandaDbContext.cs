@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Comanda.Api
 {
@@ -60,6 +61,12 @@ namespace Comanda.Api
                         Imagem = "https://img77.uenicdn.com/image/upload/v1543484687/service_images/shutterstock_1040760661.jpg"
 
                     }
+                  
+                );
+            modelBuilder.Entity<Models.CategoriaCardapio>().HasData(
+                new Models.CategoriaCardapio { Id = 1, Nome = "lanche" },
+                new Models.CategoriaCardapio { Id = 2, Nome = "Bebidas" },
+                new Models.CategoriaCardapio { Id = 3, Nome = "Acompanhamentos" }
                 );
             base.OnModelCreating(modelBuilder);
         }
@@ -71,5 +78,6 @@ namespace Comanda.Api
         public DbSet<Models.PedidoCozinhaItem> PedidosCozinhaItens { get; set; } = default!;
         public DbSet<Models.Reserva> Reservas { get; set; } = default!;
         public DbSet<Models.CardapioItem> CardapioItens { get; set; } = default!;
+        public DbSet<Models.CategoriaCardapio> categoriaCardapios { get; set; } = default!;
     }
 }

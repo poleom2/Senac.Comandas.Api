@@ -9,5 +9,6 @@
         public bool PossuiPreparo { get; set; }
         public string Imagem { get; set; }
         public string Tipo { get; set; }
+        public int? CategoriaCardapioId { get; internal set; }
     }
 }

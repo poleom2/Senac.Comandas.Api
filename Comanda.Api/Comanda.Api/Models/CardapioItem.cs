@@ -14,5 +14,7 @@ namespace Comanda.Api.Models
         public bool PossuiPreparo { get; set; }
         public string Imagem { get; set; }
         public string Tipo { get; set; }
+        public int? CategoriaCardapioId { get; set; } 
+        public CategoriaCardapio? cardapioId { get; set; }
     }
 }
