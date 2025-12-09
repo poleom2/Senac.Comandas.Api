@@ -25,9 +25,15 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configura o middleware CORS
+using(var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ComandaDbContext>();
+    await db.Database.MigrateAsync();
+}
 
 
 app.UseCors("MinhaPolitica");
+
 
 
 // Configure the HTTP request pipeline.

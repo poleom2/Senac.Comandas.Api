@@ -22,7 +22,21 @@ namespace Comanda.Api.Controllers
         [HttpGet]
         public IResult Get()
         {
-            var comandas = _context.Comandas.ToList();
+            var comandas = _context.Comandas.Select(
+                c => new comandaCrestrResponse
+                {
+                    id = c.Id,
+                    NomeCliente = c.NomeCliente,
+                    NumeroMesa = c.NumeroMesa,
+                    Itens = c.Itens.Select(i => new ComandaItemResponse
+                    {
+                        Id = i.Id,
+                        Titulo = _context.CardapioItens.First(ci => ci.Id == i.CardapioItemId).Titulo
+
+                        
+                    }).ToList(),
+                }
+            ).ToList();
             return Results.Ok(comandas);
         }
 
